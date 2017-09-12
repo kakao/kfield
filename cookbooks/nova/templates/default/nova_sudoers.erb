@@ -1,0 +1,4 @@
+Defaults:nova !requiretty
+Defaults:nova secure_path="<%= node[:openstack][:install][:source][:path] %>/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+nova ALL = (root) NOPASSWD: <%= node[:openstack][:install][:source][:path] %>/bin/nova-rootwrap /etc/nova/rootwrap.conf *

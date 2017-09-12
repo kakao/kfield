@@ -1,0 +1,96 @@
+---
+- hosts: sandbox
+  sudo: yes
+  tasks:
+  - name : Install required packages
+    sudo: yes
+    apt: name=quagga 
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/daemons state=touch
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/bgpd.conf state=touch
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/zebra.conf state=touch
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/debian.conf state=touch
+
+  - name: quagga daemons
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/daemons
+      line: "{{ item }}"
+    with_items:
+      - zebra=yes
+      - bgpd=yes
+
+  - name: quagga bgpd.conf
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/bgpd.conf
+      line: "{{ item }}"
+    with_items:
+      - hostname sandbox
+      - password pass
+      - enable password pass
+      - router bgp 10101
+      -  bgp router-id 10.252.200.254
+      -  neighbor 10.252.200.200 remote-as 10101
+      -  neighbor 10.252.200.201 remote-as 10101
+      -  neighbor 10.252.200.202 remote-as 10101
+      -  neighbor 10.252.200.203 remote-as 10101
+      - !
+      - route-map bgp-access permit 10
+      -  match ip address prefix-list pl-route
+      - !
+      - ip prefix-list pl-route seq 10 permit 0.0.0.0/0 ge 31
+      - !
+      - log file /var/log/quagga/bgpd.log
+      - !
+      - line vty
+
+  - name: quagga zebra.conf
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/zebra.conf
+      line: "{{ item }}"
+    with_items:
+      - hostname sandbox
+      - password pass
+      - enable password pass
+      - log file /var/log/quagga/zebra.log
+
+  - name: quagga debian.conf
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/debian.conf
+      line: "{{ item }}"
+    with_items:
+      - vtysh_enable=yes
+      - zebra_options="  --daemon -A 127.0.0.1"
+      - bgpd_options="   --daemon -A 0.0.0.0"
+      - watchquagga_enable=yes
+      - watchquagga_options=(--daemon)
+
+  - name : restart quagga daemon
+    sudo: yes
+    shell: service quagga restart
+
+  - name : enable ip_forward
+    sudo: yes
+    lineinfile:
+      dest: /etc/sysctl.conf
+      line: "{{ item }}"
+    with_items:
+      - net.ipv4.ip_forward = 1
+
+  - name : sysctl config
+    sudo: yes
+    shell: sysctl -p /etc/sysctl.conf

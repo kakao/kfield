@@ -1,0 +1,8 @@
+# vim: set ft=upstart ts=2 et:
+description "Heat API Cloudwatch server"
+author "James Page <james.page@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+exec start-stop-daemon --start --chuid heat --exec <%= node[:openstack][:install][:source][:path] %>/bin/heat-api-cloudwatch

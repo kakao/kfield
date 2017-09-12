@@ -1,0 +1,99 @@
+{
+  "vms": {
+   "lb0": {
+      "memory": 1024,
+      "run_list": [
+        "role[base]",
+        "role[openstack-api-loadbalancer]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+   "logger": {
+      "memory": 2048,
+      "run_list": [
+        "recipe[java::default]",
+        "recipe[curl::default]",
+        "role[logstash_server]",
+        "recipe[kibana]"
+      ]
+    },
+   "db0": {
+      "memory": 1024,
+      "run_list": [
+        "role[openstack-mysql]",
+        "role[memcached]",
+        "role[openstack-rabbitmq]",
+        "role[ceilometer-datastore]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+
+   "control0": {
+      "memory": 4096,
+      "cpus": 2,
+      "run_list": [
+        "role[base]",
+        "role[openstack-control]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+
+  "control1": {
+      "memory": 2048,
+      "run_list": [
+        "role[base]",
+        "role[openstack-control]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+
+  "compute000": {
+      "memory": 4096,
+      "run_list": [
+        "role[base]",
+        "role[openstack-compute]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+  "compute001": {
+      "memory": 4096,
+      "run_list": [
+        "role[base]",
+        "role[openstack-compute]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+  "compute002": {
+      "memory": 4096,
+      "run_list": [
+        "role[base]",
+        "role[openstack-compute]",
+        "recipe[rsyslog::client]"
+      ]
+    },
+  "cdh": {
+      "memory": 3072,
+      "run_list": [
+        "role[base]"
+        ]
+  },
+  "hadoop1": {
+      "memory": 2048,
+      "run_list": [
+        "role[base]"
+        ]
+  },
+  "hadoop2": {
+      "memory": 2048,
+      "run_list": [
+        "role[base]"
+        ]
+  },
+  "hadoop0": {
+      "memory": 2048,
+      "run_list": [
+        "role[base]"
+        ]
+  }
+ }
+}

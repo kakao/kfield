@@ -1,0 +1,11 @@
+# mongodb.conf
+
+smallfiles = false
+
+dbpath=/var/lib/mongodb
+logpath=/var/log/mongodb/mongodb.log
+
+logappend=true
+
+journal=true
+

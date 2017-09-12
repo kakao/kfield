@@ -1,0 +1,64 @@
+# encoding: UTF-8
+require 'net/http'
+require 'uri'
+require 'digest'
+require 'time'
+
+module Daumkakao
+  class SendTalk < Chef::Handler
+    def report
+      now = ::Time.now
+      name = node.fqdn
+
+      if failed?
+        message = "(흑흑)(흑흑)Chef FAILED(흑흑)(흑흑) on #{name} @ #{now}\n\n"
+        message += "Chef Run reported:\n"
+        message += "#{run_status.formatted_exception}\n\n"
+        message += "Backtrace:\n"
+        message += Array(backtrace).join("\n")
+        send_new_talk(
+          :body => message
+        )
+      end
+    end
+
+    private
+
+    def send_new_talk data = {}
+      cache = Chef::Config[:file_cache_path]
+      cache = ::File.join cache, 'last_run.digest'
+
+      last_digest = nil
+      if ::File.exists? cache
+        last_digest = ::File.read cache
+      end
+
+      digest = ::Digest::SHA256.hexdigest data.to_s
+      ::File.open(cache, 'w') do |io|
+        io << digest
+      end
+
+      if digest != last_digest
+        send_talk ::Hash[data]
+      end
+    end
+
+    def send_talk options = {}
+      options[:body] ||= '...'
+      message = unindent options[:body]
+      uri = 'http://api.virtual.com/send/group/kakaotalk?to='
+      uri += "<%= @room %>"
+      uri += '&msg=' + URI.escape(message)
+      begin
+        ::Net::HTTP.get_response(URI.parse(uri))
+      rescue Exceptions => e
+        puts "cannot connect to api: #{e}"
+      end
+    end
+
+    def unindent string
+      first = string[/\A\s*/]
+      string.gsub /^#{first}/, ''
+    end
+  end
+end

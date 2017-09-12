@@ -1,0 +1,21 @@
+# vim:set ft=upstart ts=2 et:
+description "v2 quagga zebra daemon"
+
+start on runlevel [2345] and started hostroute-peering-network
+stop on runlevel [!2345]
+
+pre-start script
+  mkdir -p /var/run/quagga
+  chown quagga.quagga /var/run/quagga
+  if [ -z "`ip netns |grep <%= node[:neutron][:host_route][:global_namespace] %>`" ]; then
+    ip netns add <%= node[:neutron][:host_route][:global_namespace] %>
+  fi
+  ip netns exec <%= node[:neutron][:host_route][:global_namespace] %> ip link set lo up
+  test -z "`ip netns exec <%= node[:neutron][:host_route][:global_namespace] %> netstat -nlpt|grep zebra`" || { stop ; exit 0; }
+end script
+
+respawn
+
+script
+  exec ip netns exec <%= node[:neutron][:host_route][:global_namespace] %> /usr/lib/quagga/zebra --config_file=/etc/quagga/hostroute-zebra.conf --pid_file=/var/run/quagga/zebra_hostroute.pid
+end script

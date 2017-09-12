@@ -1,0 +1,25 @@
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty main restricted
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty main restricted
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-updates main restricted
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-updates main restricted
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty universe
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty universe
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-updates universe
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-updates universe
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty multiverse
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-updates multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-updates multiverse
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ trusty-backports main restricted universe multiverse
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu trusty-security main restricted
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu trusty-security main restricted
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu trusty-security universe
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu trusty-security universe
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu trusty-security multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu trusty-security multiverse

@@ -1,0 +1,22 @@
+# vim:set ft=upstart ts=2 et:
+description "Neutron DHCP Agent"
+author "Chuck Short <zulcss@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+chdir /var/run
+
+pre-start script
+  mkdir -p /var/run/neutron
+  chown neutron:root /var/run/neutron
+  # Check to see if openvswitch plugin in use by checking
+  # status of cleanup upstart configuration
+  if status neutron-ovs-cleanup; then
+    start wait-for-state WAIT_FOR=neutron-ovs-cleanup WAIT_STATE=running WAITER=neutron-dhcp-agent
+  fi
+end script
+
+exec start-stop-daemon --start --chuid neutron --exec <%= node[:openstack][:install][:source][:path] %>/bin/neutron-dhcp-agent -- --config-file=/etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini <%= node[:neutron][:tenant_network_type] == "hostroute" ? '--config-file=/etc/neutron/route.ini' : '' %> --log-file=/var/log/neutron/dhcp-agent.log

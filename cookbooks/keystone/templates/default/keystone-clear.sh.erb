@@ -1,0 +1,9 @@
+#!/bin/bash
+export SERVICE_ENDPOINT="<%= node[:openstack][:use_ssl] ? 'https' : 'http'%>://<%= node[:fqdn] %>:35357/v2.0"
+export SERVICE_TOKEN=<%= node[:openstack][:admin_token] %>
+
+keystone service-list | grep 'OpenStack' | awk '{print $2}' | xargs -L1 keystone service-delete
+keystone role-delete Member
+keystone role-delete admin
+keystone user-list | grep True | awk '{print $2}' | xargs -L1 keystone user-delete
+keystone tenant-list | grep True | awk '{print $2}' | xargs -L1 keystone tenant-delete

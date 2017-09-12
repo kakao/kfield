@@ -1,0 +1,4 @@
+Defaults:cinder !requiretty
+Defaults:cinder secure_path="<%= node[:openstack][:install][:source][:path] %>/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+cinder ALL = (root) NOPASSWD: <%= node[:openstack][:install][:source][:path] %>/bin/cinder-rootwrap /etc/cinder/rootwrap.conf *

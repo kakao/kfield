@@ -1,0 +1,8 @@
+# This file is managed by chef.  Do not edit it.
+#
+
+[global]
+timeout = 10
+index-url = <%= node[:base][:pypi][:index_url] %>
+trusted-host = <%= @trusted_host %>
+proxy = <%= node[:base][:pypi][:proxy] %>

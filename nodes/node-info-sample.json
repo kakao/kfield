@@ -1,0 +1,20 @@
+{
+  "name": "ccc-stage-md2-04.dakao.io",
+  "chef_environment": "stage_v2",
+  "normal": {
+    "neutron": {
+      "host_route": {
+        "enable_route": true,
+        "route_phy_interface": "eth1",
+        "route_ip_cidr": "10.51.67.5/28",
+        "neighbor": "10.51.67.1",
+        "static_routes": "0.0.0.0/0:10.51.67.1",
+        "storage_ip_cidr": "10.51.67.9/28",
+        "ibgp_as": 65103
+      }
+    }
+  },
+  "json_class": "Chef::Node",
+  "chef_type": "node",
+  "run_list": []
+}

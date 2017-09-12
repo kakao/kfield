@@ -1,0 +1,59 @@
+# setup vpn
+- apt: name=openvpn
+- apt: name=easy-rsa
+- file: name={{ easy_rsa }}/keys recurse=yes state=directory
+- shell: cp -r /usr/share/easy-rsa/* {{ easy_rsa }}/ creates={{ easy_rsa }}/build-ca
+- command: cp {{ easy_rsa }}/openssl-1.0.0.cnf {{ easy_rsa }}/openssl.cnf creates={{ easy_rsa }}/openssl.cnf
+- lineinfile: dest={{ easy_rsa }}/vars regexp="{{ item.regex }}" line="{{ item.line }}" backrefs=yes
+  with_items:
+    - { regex: '(export KEY_COUNTRY=)\"US\"', line: '\1\"KR\"' }
+    - { regex: '(export KEY_PROVINCE=)\"CA\"', line: '\1\"Seoul\"' }
+    - { regex: '(export KEY_CITY=)\"SanFrancisco\"', line: '\1\"Sungnam\"' }
+    - { regex: '(export KEY_ORG=)\"Fort-Funston\"', line: '\1\"{{ ansible_fqdn }}\"' }
+    - { regex: '(export KEY_EMAIL=)\"me@myhost.mydomain\"', line: '\1\"deploy@kakao.com\"' }
+    - { regex: '(export KEY_EMAIL=)\mail@host.domain', line: '\1\"deploy@kakao.com\"' }
+    - { regex: '(export KEY_NAME=)\"EasyRSA\"', line: '\1\"{{ ansible_fqdn }}\"' }
+    - { regex: '(export KEY_OU=)\"MyOrganizationalUnit\"', line: '\1\"OpenStack Sandbox\"' }
+# server 인증서
+- shell: chdir={{ easy_rsa }} . ./vars; ./clean-all creates={{ easy_rsa }}/keys/index.txt
+
+- shell: chdir={{ easy_rsa }} . ./vars; ./build-ca --batch creates={{ easy_rsa }}/keys/ca.key
+- shell: chdir={{ easy_rsa }} . ./vars; ./pkitool --server --batch server creates={{ easy_rsa }}/keys/server.key
+- shell: chdir={{ easy_rsa }} . ./vars; ./build-dh creates={{ easy_rsa }}/keys/dh2048.pem
+- command: cp {{ easy_rsa }}/keys/{{ item }} /etc/openvpn/{{ item }} creates=/etc/openvpn/{{ item }}
+  with_items:
+    - server.crt
+    - server.key
+    - ca.crt
+    - dh2048.pem
+
+- shell: chdir={{ easy_rsa }} . ./vars; ./build-key --batch deploy creates={{ easy_rsa }}/keys/deploy.key
+
+# client setup
+- file: name={{ easy_rsa }}/deploy.tblk recurse=yes state=directory
+- shell: cp {{ easy_rsa }}/keys/{{ item }} {{ easy_rsa }}/deploy.tblk/ creates={{ easy_rsa }}/deploy.tblk/{{ item }}
+  with_items:
+    - deploy.crt
+    - deploy.key
+  notify:
+    - tarup deploy
+- shell: cp /etc/openvpn/ca.crt {{ easy_rsa }}/deploy.tblk/ creates={{ easy_rsa }}/deploy.tblk/ca.crt
+  notify:
+    - tarup deploy
+- shell: cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf {{ easy_rsa }}/deploy.tblk/ creates={{ easy_rsa }}/deploy.tblk/client.conf
+  notify:
+    - tarup deploy
+- lineinfile: dest={{ easy_rsa }}/deploy.tblk/client.conf regexp="{{ item.regex }}" line="{{ item.line }}" backrefs=yes
+  with_items:
+    - { regex: 'cert client.crt', line: 'cert deploy.crt' }
+    - { regex: 'key client.key', line: 'key deploy.key' }
+    - { regex: 'remote my-server-1 1194', line: 'remote {{ ansible_fqdn }} 1194' }
+  notify:
+    - tarup deploy
+
+# setup openvpn
+- template: src=server.conf.j2 dest=/etc/openvpn/server.conf
+  notify:
+    - restart openvpn
+
+# vim: et ai sw=2 ts=2

@@ -1,0 +1,34 @@
+{
+  "vms": {
+   "cdh": {
+      "run_list": [
+       "role[base]" 
+      ]
+    },
+   "cdh-agent":{
+      "run_list": [
+       "role[base]" 
+      ]
+   },
+    "hadoop000":{
+      "run_list": [
+       "role[base]" 
+      ]
+   },
+   "hadoop001":{
+      "run_list": [
+       "role[base]" 
+      ]
+   },
+   "hadoop002":{
+      "run_list": [
+       "role[base]" 
+      ]
+   },
+   "jenkins":{
+      "run_list": [
+       "role[base]" 
+      ]
+   }
+ }
+}

@@ -1,0 +1,26 @@
+data_directory = '/var/lib/postgresql/{{datastore['version']}}/main'
+hba_file = '/etc/postgresql/{{datastore['version']}}/main/pg_hba.conf'
+ident_file = '/etc/postgresql/{{datastore['version']}}/main/pg_ident.conf'
+
+listen_addresses = '*'
+port = 5444
+max_connections = 100
+shared_buffers = 24MB
+
+wal_level = archive
+log_checkpoints = on
+log_autovacuum_min_duration = 0
+log_statement = 'ddl'
+log_line_prefix = '%t [%e] [%p (%l)] %u@%r/%d '
+log_min_duration_statement = 1000
+log_filename = 'enterprisedb-%Y-%m-%d.log'
+max_wal_senders = 3
+
+lc_messages = 'ko_KR.UTF-8'
+lc_monetary = 'ko_KR.UTF-8'
+lc_numeric = 'ko_KR.UTF-8'
+lc_time = 'ko_KR.UTF-8'
+
+default_text_search_config = 'pg_catalog.simple'
+
+

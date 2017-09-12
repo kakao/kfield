@@ -1,0 +1,11 @@
+description "Keystone API server"
+author "Soren Hansen <soren@linux2go.dk>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+exec start-stop-daemon --start --chuid keystone \
+            --chdir /var/lib/keystone --name keystone \
+            --exec <%= node[:openstack][:install][:source][:path] %>/bin/keystone-all

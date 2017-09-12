@@ -1,0 +1,76 @@
+---
+  driver:
+    name: openstack
+    server_name_prefix: 'dceval'
+    server_domain: '.b1.your_horizon/'
+    openstack_username: 'infra'
+    openstack_tenant: 'DC_Evaluation'
+    openstack_api_key: 'openstack'
+    openstack_auth_url: 'https://your_keystone_public_auth:5000/v2.0/tokens'
+    openstack_region: 'busan-v1'
+    flavor_ref: 'm1.large'
+    username: 'root'
+    key_name: 'andrew'
+    private_key_path: '.openstack/ccc-andrew.pem'
+    availability_zone: 'Dev_Zone'
+  transport:
+    ssh_key: '.openstack/ccc-andrew.pem'
+    connection_timeout: 10
+    connection_retries: 5
+    username: 'root'
+
+  driver_config:
+    image_ref: <%= ENV['image_ref'] %>
+
+  provisioner:
+    name: chef_zero
+    require_chef_omnibus: 12.10.24
+    chef_omnibus_url: 'http://ftp.yoursite.com/install.sh'
+    roles_path: ./.json/roles/
+    environments_path: ./.json/environments/
+  platforms:
+    - name: ubuntu-14
+      driver_config:
+        image_ref: kfield-trusty
+    - name: ubuntu-16
+      driver_config:
+        image_ref: kfield-xenial
+  suites:
+    - name: default
+      run_list:
+        - role[base]
+        - role[openstack-mysql]
+        - role[memcached]
+        - role[openstack-rabbitmq]
+        - role[openstack-api-rabbitmq]
+        - role[openstack-trove-rabbitmq]
+        - role[openstack-control]
+        - role[openstack-compute]
+      attributes:
+      provisioner:
+        client_rb:
+          environment: jenkins
+    - name: 32bit
+      run_list:
+        - role[base]
+        - role[openstack-mysql]
+        - role[memcached]
+        - role[openstack-rabbitmq]
+        - role[openstack-api-rabbitmq]
+        - role[openstack-trove-rabbitmq]
+        - role[openstack-control]
+        - role[neutron-lbaas-agent]
+        - role[openstack-compute]
+        - role[neutron-l3-agent]
+      attributes:
+        neutron:
+          host_route:
+            enable_route: true
+            route_ip_cidr: "10.252.200.200/24"
+            neighbor: "10.252.200.254"
+            static_routes: "0.0.0.0/0:10.252.200.254"
+            storage_ip_cidr: "10.252.200.100/24"
+            ibgp_as: 10101
+      provisioner:
+        client_rb:
+          environment: jenkins_32

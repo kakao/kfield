@@ -1,0 +1,39 @@
+{
+  "libvirt" : {
+    "provider" : {
+      "management_network_address" : "10.252.20.0/24",
+      "management_network_name" : "virbr0",
+      "management_network_mode" : "route"
+    },
+    "config" : {
+      "endpoints" : [
+        {
+          "lb0" : {
+            "domain" : "your.com",
+            "entries" : {
+              "api" : "devel-api",
+              "dashboard" : "devel-dashboard"
+            }
+          }
+        },
+        {
+          "swift0" : {
+            "domain" : "your.com",
+            "entries" : {
+              "api" : "devel-swift"
+            }
+          }
+        }
+      ],
+      "vm_start_ip_address" : 11,
+      "mode" : "ovs",
+      "ifaces" : [
+        {
+          "name" : "br-data",
+          "ip" : "10.252.200.254",
+          "netmask" : "255.255.255.0"
+        }
+      ]
+    }
+  }
+}

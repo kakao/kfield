@@ -1,0 +1,18 @@
+[dispersion]
+auth_url = <%= @auth_protocol  %>://<%= @auth_host %>:5000/v2.0/
+auth_user = admin:admin
+auth_key = <%= node[:openstack][:admin_passwd] %>
+auth_version = 2.0
+
+endpoint_type = publicURL
+keystone_api_insecure = no
+
+swift_dir = /etc/swift
+dispersion_coverage = 10.0
+retries = 5
+concurrency = 25
+container_populate = yes
+object_populate = yes
+container_report = yes
+object_report = yes
+dump_json = no

@@ -1,0 +1,17 @@
+description "ceilometer-agent-compute"
+author "Chuck Short <zulcss@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+chdir /var/run
+
+pre-start script
+	mkdir -p /var/run/ceilometer
+	chown ceilometer:ceilometer /var/run/ceilometer
+
+	mkdir -p /var/lock/ceilometer
+	chown ceilometer:ceilometer /var/lock/ceilometer
+end script
+
+exec start-stop-daemon --start --chuid ceilometer --exec <%= node[:openstack][:install][:source][:path] %>/bin/ceilometer-agent-compute

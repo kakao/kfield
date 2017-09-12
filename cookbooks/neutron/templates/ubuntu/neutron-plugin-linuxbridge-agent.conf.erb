@@ -1,0 +1,17 @@
+# vim:set ft=upstart ts=2 et:
+description "Neutron LinuxBridge Plugin Agent"
+author "Chuck Short <zulcss@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+chdir /var/run
+
+pre-start script
+  mkdir -p /var/run/neutron
+  chown neutron:root /var/run/neutron
+end script
+
+exec start-stop-daemon --start --chuid neutron --exec <%= node[:openstack][:install][:source][:path] %>/bin/neutron-linuxbridge-agent -- --config-file=/etc/neutron/neutron.conf --config-file=<%= node[:neutron][:plugin_config] %> <%= node[:neutron][:plugin] == 'ml2' ? '--config-file=/etc/neutron/plugins/plugin.ini' : '' %> --log-file=/var/log/neutron/linuxbridge-agent.log

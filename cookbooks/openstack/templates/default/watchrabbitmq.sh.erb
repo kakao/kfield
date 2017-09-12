@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if (( $(/usr/local/bin/rabbitmqadmin list vhosts messages | sed '1,3d;$d' | awk '{ print $2 }') == 0 )); then
+  exit 0
+fi
+
+sleep 120
+if (( $(/usr/local/bin/rabbitmqadmin list vhosts messages | sed '1,3d;$d' | awk '{ print $2 }') == 0 )); then
+  exit 0
+fi
+
+sleep 180
+if (( $(/usr/local/bin/rabbitmqadmin list vhosts messages | sed '1,3d;$d' | awk '{ print $2 }') == 0 )); then
+  exit 0
+fi
+
+sleep 300
+if (( $(/usr/local/bin/rabbitmqadmin list vhosts messages | sed '1,3d;$d' | awk '{ print $2 }') == 0 )); then
+  exit 0
+fi
+
+for i in $(/usr/local/bin/rabbitmqadmin list queues name messages | sed '2d' | awk '{if( $4 != "|" && $4 > 0) print $2"%"$4}'); do
+  name=$(echo $i | cut -d'%' -f1)
+  count=$(echo $i | cut -d'%' -f2)
+  curl -XPOST http://wt.your.com/wt/send -d "group=openstack_monitoring&msg=[OPENSTACK WARNING]%0A큐가 10분동안 안 비워짐%0A환경: <%= node.chef_environment %>%0A큐이름: $name%0A큐카운트: $count%0A링크: http://<%= node[:fqdn] %>:15672/#/queues/%252F/$name"
+done
+
+exit 1

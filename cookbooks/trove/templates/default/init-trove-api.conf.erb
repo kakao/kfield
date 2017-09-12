@@ -1,0 +1,13 @@
+description "Trove api server"
+author "ccc <ccc@kakaocorp.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+
+exec start-stop-daemon --start --chuid trove:trove \
+   --chdir /var/lib/trove  \
+   --exec <%= node[:openstack][:install][:source][:path] %>/bin/trove-api \
+   -- --config-file=/etc/trove/trove.conf --logfile=/var/log/trove/trove-api.log

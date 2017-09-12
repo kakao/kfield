@@ -1,0 +1,53 @@
+<VirtualHost *:<%= node['apache']['listen_ports'].first %>>
+    ServerAdmin <%= node['apache']['contact'] %>
+
+    SetEnvIfNoCase Acunetix-Product "(?i)^WVS" BAD-AGENT
+    SetEnvIfNoCase User-Agent "(ZmEu|paros|nikto|dirbuster|sqlmap|openvas|w3af|Morfeus|JCE|Zollard)" BAD-AGENT
+
+    <LocationMatch /.*>
+        Order Allow,Deny
+        Allow from all
+        Deny from env=BAD-AGENT
+    </LocationMatch> 
+
+    DocumentRoot <%= node[:apache][:docroot_dir] %>
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+      <% if node[:apache][:version] == '2.4' %>
+        Require all granted
+      <% end %>
+    </Directory>
+    <Directory <%= node[:apache][:docroot_dir] %>>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride None
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    # ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    # <Directory "/usr/lib/cgi-bin">
+    #         AllowOverride None
+    #         Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+    #         Order allow,deny
+    #         Allow from all
+    # </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Alias /doc/ "/usr/share/doc/"
+    # <Directory "/usr/share/doc/">
+    #     Options Indexes MultiViews FollowSymLinks
+    #     AllowOverride None
+    #     Order deny,allow
+    #     Deny from all
+    #     Allow from 127.0.0.0/255.0.0.0 ::1/128
+    # </Directory>
+
+</VirtualHost>

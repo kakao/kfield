@@ -1,0 +1,14 @@
+hostname sandbox
+password pass
+enable password pass
+router bgp 10101
+bgp router-id 10.252.200.254
+redistribute connected route-map bgp-access
+neighbor 10.252.200.200 remote-as 10101
+neighbor 10.252.200.201 remote-as 10101
+
+route-map bgp-access permit 10
+match ip address prefix-list pl-route
+ip prefix-list pl-route seq 10 permit 0.0.0.0/0 ge 31
+log file /var/log/quagga/bgpd-sandbox.log
+line vty

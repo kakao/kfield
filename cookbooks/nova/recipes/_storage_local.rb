@@ -1,0 +1,1 @@
+# local storage는 아무것도 하지 않

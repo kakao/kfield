@@ -1,0 +1,9 @@
+[fwaas]
+<% if node[:neutron][:fwaas][:enable] -%>
+enabled = True
+  <% if node[:openstack][:release] == 'juno' -%>
+driver = neutron.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver
+  <% elsif node[:openstack][:release] == 'kilo' -%>
+driver = neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver
+  <% end -%>
+<% end %>

@@ -1,0 +1,29 @@
+---
+- hosts: sandbox
+  tasks:
+  - name: Check .ssh/config file existence.
+    file: path=~deploy/.ssh/config state=touch
+
+  - name: Set ssh config for vm connection
+    lineinfile:
+      dest: ~deploy/.ssh/config
+      line: "{{ item }}"
+    with_items:
+      - Host *.stack db0 lb0 control0 compute000
+      - User vagrant
+      - LogLevel=ERROR
+      - StrictHostKeyChecking no
+      - UserKnownHostsFile /dev/null
+      - IdentityFile /home/deploy/.vagrant.d/insecure_private_key
+
+
+  - name: Copy vm network generation script
+    copy:
+      src: gen_vm_network.sh
+      dest: ~deploy/gen_vm_network.sh
+
+  - name: Generate vm network
+    shell: gen_vm_network.sh
+    args:
+      chdir: ~deploy/
+      executable: /bin/bash

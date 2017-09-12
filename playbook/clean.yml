@@ -1,0 +1,6 @@
+---
+- hosts: sandbox
+  sudo: yes
+  tasks:
+    - apt: name=openvpn state=absent purge=yes
+    - file: path=/etc/openvpn state=absent

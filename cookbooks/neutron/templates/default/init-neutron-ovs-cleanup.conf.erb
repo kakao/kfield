@@ -1,0 +1,13 @@
+# vim:set ft=upstart ts=2 et:
+description "Neutron OVS cleanup"
+author "James Page <james.page@ubuntu.com>"
+
+start on started openvswitch-switch
+stop on runlevel [!2345]
+
+pre-start script
+  [ ! -x /usr/bin/neutron-ovs-cleanup ] && exit 0 
+  start-stop-daemon --start --chuid neutron --exec <%= node[:openstack][:install][:source][:path] %>/bin/neutron-ovs-cleanup -- \
+    --log-file /var/log/neutron/ovs-cleanup.log \
+    --config-file /etc/neutron/neutron.conf --verbose
+end script

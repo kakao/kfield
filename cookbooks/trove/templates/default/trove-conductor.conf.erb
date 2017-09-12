@@ -1,0 +1,59 @@
+[DEFAULT]
+verbose=<%= @verbose %>
+debug=<%= @debug %>
+bind_host=0.0.0.0
+trove_conductor_workers = <%= node[:trove][:conductor_workers] %>
+
+conductor_manager = trove.conductor.manager.Manager
+control_exchange=trove
+
+bind_port=8779
+rabbit_port = <%= @rabbit_node[0][:rabbitmq][:port] %>
+rabbit_hosts = <%= @rabbit_node.sort{|x,y| x[:fqdn] <=> y[:fqdn]}.map{|x| "#{x[:fqdn]}:5672"}.join(',') %>
+rabbit_userid = <%= @rabbit_node[0][:rabbitmq][:default_user] %>
+rabbit_password = <%= @rabbit_node[0][:rabbitmq][:default_pass] %>
+rabbit_virtual_host = <%= @rabbit_node[0][:rabbitmq][:default_vhost] %>
+rpc_backend=trove.openstack.common.rpc.impl_kombu
+sql_connection=<%= @sql_connection %>
+sql_idle_timeout=3600
+db_api_implementation="trove.db.sqlalchemy.api"
+
+trove_auth_url=<%= @auth_addr %>:35357
+
+os_region_name = <%= node[:openstack][:region_name] %>
+nova_compute_service_type=compute
+cinder_service_type=volumev2
+swift_service_type=object-store
+heat_service_type=orchestration
+neutron_service_type=network
+
+#network_label_regex=vlan$
+network_label_regex=<%= @network_label %>
+
+trove_volume_support=False
+block_device_mapping=vdb
+device_path=/dev/vdb
+max_accepted_volume_size=10
+max_instances_per_user=10
+max_volumes_per_user=100
+max_backups_per_user=50
+volume_time_out=30
+
+http_get_rate=200
+http_post_rate=200
+http_put_rate=200
+http_delete_rate=200
+http_mgmt_post_rate=200
+
+trove_dns_support=False
+dns_account_id=123456
+dns_auth_url=http://127.0.0.1:5000/v2.0
+dns_username=user
+dns_passkey=password
+dns_ttl=3600
+dns_domain_name='trove.com.'
+dns_domain_id=11111111-1111-1111-1111-111111111111
+dns_driver=trove.dns.designate.driver.DesignateDriver
+dns_instance_entry_factory=trove.dns.designate.driver.DesignateInstanceEntryFactory
+dns_endpoint_url=http://127.0.0.1/v1/
+dns_service_type=dans

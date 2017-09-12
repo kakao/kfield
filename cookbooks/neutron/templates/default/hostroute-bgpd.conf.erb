@@ -1,0 +1,19 @@
+hostname <%= node[:hostname] %>
+password <%= node[:neutron][:host_route][:router_pass] %>
+enable password <%= node[:neutron][:host_route][:router_enable_pass] %>
+!
+router bgp <%= node[:neutron][:host_route][:ibgp_as] %>
+ bgp router-id <%= node[:neutron][:host_route][:route_ip_cidr].split('/')[0] %> 
+ redistribute static route-map bgp-access
+ redistribute connected route-map bgp-access
+ redistribute kernel route-map bgp-access
+ neighbor <%= node[:neutron][:host_route][:neighbor] %> remote-as <%= node[:neutron][:host_route][:ibgp_as] %>
+!
+route-map bgp-access permit 10
+ match ip address prefix-list pl-route
+! 
+ip prefix-list pl-route seq 10 permit 0.0.0.0/0 ge 31
+!
+log file /var/log/quagga/bgpd-hostroute.log
+!
+line vty

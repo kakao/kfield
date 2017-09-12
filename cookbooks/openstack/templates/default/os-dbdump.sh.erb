@@ -1,0 +1,2 @@
+#!/bin/sh
+mysqldump -uroot -p<%= node[:mysqld][:root_password] %> --all-databases --add-drop-database > dump-`date +'%y%m%d'`.sql

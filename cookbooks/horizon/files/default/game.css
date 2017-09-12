@@ -1,0 +1,11 @@
+#splash {
+	background: #432f30;
+}
+
+#splash .login {
+    background: #ffffff url(../img/custom_logo_splash.png) no-repeat center 20px;
+}
+
+h1.brand a {
+    background: url(../img/custom_logo_small.png) top left no-repeat;
+}

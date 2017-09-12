@@ -1,0 +1,20 @@
+# swift-container-replicator - SWIFT Container Replicator
+#
+# The swift container replicator.
+
+description     "SWIFT Container Replicator"
+author          "Marc Cluet <marc.cluet@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+pre-start script
+  if [ -f "/etc/swift/container-server.conf" ]; then
+    exec <%= node[:openstack][:install][:source][:path] %>/bin/swift-init container-replicator start
+  else
+    exit 1
+  fi
+end script
+
+post-stop exec <%= node[:openstack][:install][:source][:path] %>/bin/swift-init container-replicator stop
+

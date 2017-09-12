@@ -1,0 +1,2 @@
+source 'http://ftp.daumkakao.com/rubygems'
+gem 'serverspec'

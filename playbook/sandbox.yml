@@ -1,0 +1,13 @@
+---
+- hosts: sandbox
+  sudo: yes
+  vars:
+    easy_rsa: /etc/openvpn/easy-rsa
+  tasks:
+    - apt: name=tmux 
+    - include: openvpn.yml
+
+  handlers:
+    - include: handlers.yml
+
+# vim: et ai sw=2 ts=2

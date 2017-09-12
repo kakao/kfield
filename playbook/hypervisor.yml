@@ -1,0 +1,36 @@
+---
+- hosts: sandbox
+  tasks:
+  - name: Install required packages
+    sudo: yes
+    apt: name={{ item }}
+    with_items:
+    - qemu-kvm
+    - libvirt-bin
+    - librbd-dev
+    - virtinst
+
+  - name: Check kvm nested
+    command: cat /sys/module/kvm_intel/parameters/nested
+    register: kvm_nested
+
+#  - name: Set kvm-intel.conf
+#    when: kvm_nested == "N"
+#    sudo: yes
+#    lineinfile: dest=/etc/modprobe.d/kvm-intel.conf line="options kvm-intel nested=1"
+
+#  - name: Reboot if set kvm-intel.conf
+#    when: kvm_nested == "N"
+#    sudo: yes
+#    command: /sbin/reboot -t now
+
+  - name: Check kvm-ok
+    register: kvm_ok
+    command: kvm-ok
+
+  - name: Stop install
+    when: kvm_ok.stdout.find('KVM acceleration can be used') == -1
+    fail: msg="kvm-ok is not ok."
+
+
+

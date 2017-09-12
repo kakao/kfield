@@ -1,0 +1,86 @@
+---
+- hosts: sandbox
+  sudo: yes
+  tasks:
+  - name : Install required packages
+    sudo: yes
+    apt: name=quagga 
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/daemons state=touch
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/ripd.conf state=touch
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/zebra.conf state=touch
+
+  - name: Check quagga config file existence.
+    sudo: yes
+    file: path=/etc/quagga/debian.conf state=touch
+
+  - name: quagga daemons
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/daemons
+      line: "{{ item }}"
+    with_items:
+      - zebra=yes
+      - ripd=yes
+
+  - name: quagga ripd.conf
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/ripd.conf
+      line: "{{ item }}"
+    with_items:
+      - hostname sandbox
+      - password pass
+      - enable password pass
+      - router rip
+      -  network 10.252.101.0/24
+      -  network 10.252.102.0/24
+      -  network br-data
+      - log file /var/log/quagga/ripd.log
+
+  - name: quagga zebra.conf
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/zebra.conf
+      line: "{{ item }}"
+    with_items:
+      - hostname sandbox
+      - password pass
+      - enable password pass
+      - log file /var/log/quagga/zebra.log
+
+  - name: quagga debian.conf
+    sudo: yes
+    lineinfile:
+      dest: /etc/quagga/debian.conf
+      line: "{{ item }}"
+    with_items:
+      - vtysh_enable=yes
+      - zebra_options="  --daemon -A 127.0.0.1"
+      - ripd_options="   --daemon -A 0.0.0.0"
+      - watchquagga_enable=yes
+      - watchquagga_options=(--daemon)
+
+  - name : restart quagga daemon
+    sudo: yes
+    shell: service quagga restart
+
+  - name : enable ip_forward
+    sudo: yes
+    lineinfile:
+      dest: /etc/sysctl.conf
+      line: "{{ item }}"
+    with_items:
+      - net.ipv4.ip_forward = 1
+
+  - name : sysctl config
+    sudo: yes
+    shell: sysctl -p /etc/sysctl.conf
