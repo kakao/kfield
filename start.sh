@@ -1,6 +1,5 @@
 #!/bin/bash
 berks install
-berks install
 
 vagrant up db0.stack --no-provision
 vagrant up —-no-provision
