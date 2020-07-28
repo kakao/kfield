@@ -1,0 +1,44 @@
+---
+- hosts: sandbox
+  tasks:
+  - name: Add proxy setting
+    lineinfile:
+      dest: ~/.bashrc
+      line: "{{ item }}"
+    with_items:
+      - export http_proxy=http://proxy.server.io:8080
+      - export https_proxy=http://proxy.server.io:8080
+      - export no_proxy=localhost,127.0.0.1,{{ ansible_eth0.ipv4.address }}
+
+  - name: check NAT setting
+    shell: iptables -L -t nat -v | grep MASQUERADE | grep eth0
+    sudo: yes
+    register: masquerade_settings
+    ignore_errors: yes
+
+  - name: NAT setting
+    command: iptables -t nat -A POSTROUTING -j MASQUERADE -o eth0
+    sudo: yes
+    when: masquerade_settings|failed
+
+  - name: NAT setting
+    sudo: yes
+    command: sysctl net.ipv4.ip_forward=1
+
+  - name: purge resolvconf
+    sudo: yes
+    apt: name=resolvconf state=absent purge=yes
+
+  - name: search localdns
+    sudo: yes
+    copy:
+      src: resolv.conf
+      dest: /etc/resolv.conf
+
+  - name: Install OpenVSwitch
+    sudo: yes
+    apt: name=openvswitch-switch
+
+  - name: Start OpenVSwitch
+    sudo: yes
+    service: name=openvswitch-switch state=started

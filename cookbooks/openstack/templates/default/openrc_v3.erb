@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# unset v2 env
+unset OS_SERVICE_TOKEN
+unset OS_SERVICE_ENDPOINT
+unset OS_TENANT_NAME
+unset OS_USERNAME
+unset OS_PASSWORD
+unset OS_AUTH_URL
+
+username=${1:-admin}
+tenant=${2:-admin}
+
+<% if node[:openstack][:region_name] %>
+export OS_REGION_NAME=<%= node[:openstack][:region_name] %>
+<% end %>
+export OS_USERNAME=${username}
+export OS_IDENTITY_API_VERSION=<%= node[:openstack][:identity_api_version] %>
+if [ ${username} == 'admin' ]; then
+    export OS_PASSWORD="__${username}_passwd__"
+else
+    export OS_PASSWORD="${username}"
+fi
+export OS_PROJECT_NAME=${tenant}
+export OS_AUTH_URL="<%= @auth_addr %>:5000/v3"
+export OS_CACERT="<%= node[:openstack][:old_root_pem_path] %>"
+
+if [ "$tenant" == "admin" ]; then
+    export OS_SERVICE_ENDPOINT="<%= @auth_addr %>:35357/v3"
+    export OS_SERVICE_TOKEN=<%= node[:openstack][:admin_token] %>
+else
+    unset OS_SERVICE_ENDPOINT
+    unset OS_SERVICE_TOKEN
+fi
+
+if [ -f /opt/openstack/bin/activate ]; then
+    . /opt/openstack/bin/activate
+fi

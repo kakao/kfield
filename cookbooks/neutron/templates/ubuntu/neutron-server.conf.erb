@@ -1,0 +1,23 @@
+# vim:set ft=upstart ts=2 et:
+description "Neutron API Server"
+author "Chuck Short <zulcss@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+chdir /var/run
+
+pre-start script
+  mkdir -p /var/run/neutron
+  chown neutron:root /var/run/neutron
+end script
+
+script
+  [ -r /etc/default/neutron-server ] && . /etc/default/neutron-server
+  [ -r "$NEUTRON_PLUGIN_CONFIG" ] && CONF_ARG="--config-file $NEUTRON_PLUGIN_CONFIG <%= node[:neutron][:plugin] == 'ml2' ? '--config-file=/etc/neutron/plugins/plugin.ini' : '' %>"
+  exec start-stop-daemon --start --chuid neutron --exec <%= node[:openstack][:install][:source][:path] %>/bin/neutron-server -- \
+    --config-file /etc/neutron/neutron.conf \
+    --log-file /var/log/neutron/server.log $CONF_ARG
+end script

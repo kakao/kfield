@@ -1,0 +1,7 @@
+---
+ - include: sandbox.yml
+ - include: network.yml
+ - include: hypervisor.yml
+ - include: kfield.yml
+
+# vim: et ai sw=2 ts=2

@@ -1,0 +1,20 @@
+# swift-object-server - SWIFT Object Server
+#
+# The swift object server.
+
+description     "SWIFT Object Server"
+author          "Marc Cluet <marc.cluet@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+pre-start script
+  if [ -f "/etc/swift/object-server.conf" ]; then
+    exec <%= node[:openstack][:install][:source][:path] %>/bin/swift-init object-server start
+  else
+    exit 1
+  fi
+end script
+
+post-stop exec <%= node[:openstack][:install][:source][:path] %>/bin/swift-init object-server stop
+

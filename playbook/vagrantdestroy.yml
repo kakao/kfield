@@ -1,0 +1,77 @@
+# Delete by order
+---
+- hosts: sandbox
+  tasks:
+  - name: vagrant destroy
+    shell: vagrant destroy db0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: vagrant destroy
+    shell: vagrant destroy control0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: vagrant destroy
+    shell: vagrant destroy lb0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: vagrant destroy
+    shell: vagrant destroy compute000.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife node delete
+    shell: knife node delete -y db0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife node delete
+    shell: knife node delete -y control0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife node delete
+    shell: knife node delete -y lb0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife node delete
+    shell: knife node delete -y compute000.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife client delete
+    shell: knife client delete -y db0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife client delete
+    shell: knife client delete -y control0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife client delete
+    shell: knife client delete -y lb0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+  - name: knife client delete
+    shell: knife client delete -y compute000.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+
+

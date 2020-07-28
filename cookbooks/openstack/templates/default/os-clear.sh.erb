@@ -1,0 +1,131 @@
+#!/bin/bash
+<% if check_environment_production %>
+exit
+<% end %>
+service chef-client stop
+service apache2 stop
+killall -9 chef-client
+
+PURGE='apt-get -y --auto-remove purge'
+
+$PURGE python-keystoneclient
+$PURGE python-cinderclient
+$PURGE python-oslo.config
+$PURGE python-swift
+$PURGE openstack-dashboard apache2.2-common openstack-dashboard-ubuntu-theme
+rm -rf /usr/share/openstack-dashboard
+$PURGE ubuntu-cloud-keyring
+$PURGE openvswitch-common openvswitch-datapath-dkms
+$PURGE mysql-common
+$PURGE rabbitmq-server erlang-base
+$PURGE qemu-kvm libvirt0
+$PURGE qemu-system-common
+$PURGE ipxe-qemu
+$PURGE qemu-keymaps
+$PURGE build-essential
+$PURGE haproxy
+rm -f /usr/local/sbin/haproxy
+$PURGE memcached
+$PURGE python-jsonschema
+$PURGE python-cmd2
+$PURGE python-sqlalchemy
+$PURGE python-pyparsing
+$PURGE python-ldap
+$PURGE python-six
+$PURGE node-less
+$PURGE librados2
+$PURGE python-ceph
+$PURGE python-pbr
+$PURGE python-six
+$PURGE libxslt1-dev libyaml-dev libffi-dev python-virtualenv python-pip python-dev git
+pip uninstall -y openstack-kakao
+pip uninstall -y domk
+$PURGE mongodb-10gen
+
+rm -f /etc/apt/sources.list.d/10gen.list
+rm -rf /var/lib/mongodb
+
+rm -rf /etc/keystone
+rm -rf /var/lib/keystone
+rm -rf /var/log/keystone
+
+rm -rf /var/lib/mysql
+rm -rf /etc/mysql
+rm -rf /var/log/mysql
+rm -rf /var/cache/local/preseeding/mysql-server.seed
+
+rm -rf /etc/glance
+rm -rf /var/lib/glance
+rm -rf /var/log/glance
+
+rm -rf /etc/neutron
+rm -rf /var/lib/neutron
+rm -rf /var/run/neutron
+rm -rf /var/log/neutron
+rm -rf /etc/openvswitch
+rm -rf /var/run/openvswitch
+
+losetup -d /dev/loop2
+rm -rf /etc/cinder
+rm -rf /var/lib/cinder
+rm -rf /var/lib/cinder-volumes
+rm -rf /var/log/cinder
+rm -rf /var/run/cinder
+
+rm -rf /var/lib/nova
+rm -rf /var/log/nova
+rm -rf /var/run/nova
+rm -rf /tmp/keystone-signing-nova
+rm -rf /var/lib/instances
+rm -rf /var/lib/libvirt
+rm -rf /etc/libvirt
+
+rm -rf /etc/ceilometer
+rm -rf /var/lib/ceilometer
+rm -rf /var/log/ceilometer
+
+rm -rf /etc/heat
+rm -rf /var/lib/heat
+rm -rf /var/log/heat
+
+rm -rf /usr/share/openstack-dashboard
+rm -rf /var/lib/openstack-dashboard
+
+rm -rf /etc/apt/sources.list.d/openstack*
+rm -rf /var/chef/cache
+rm -rf /var/chef/backup
+rm -rf /var/lib/chef/var/cache/chef/*
+rm -rf /var/log/chef/*
+
+ifconfig eth1 0 down
+ifconfig eth2 0 down
+
+for pkg in keystone glance cinder nova neutron quantum; do
+	rm -rf /usr/share/pyshare/$pkg
+	rm -rf /usr/lib/python2.7/dist-packages/$pkg
+done
+
+iptables -F
+iptables -X
+iptables -F -t nat
+iptables -X -t nat
+iptables -F -t mangle
+iptables -X -t mangle
+
+apt-get clean all
+killall qemu-system-x86_64
+killall dnsmasq
+
+rm -f /etc/motd.tail
+
+clear_swift(){
+	rm -rf /etc/swift
+	rm -rf /etc/rsyncd.conf
+	sed -i -E 's|^.+/srv/node.+$||g' /etc/fstab
+	ps ax  | awk '/swift/{print $1}' | xargs kill
+	find /srv/node -mindepth 2 -maxdepth 2 -type d -exec rm -rf {} \;
+}
+
+clear_swift
+
+rm -rf <%= node[:openstack][:install][:source][:path] %>

@@ -1,0 +1,31 @@
+[DEFAULT]
+debug = <%= node[:openstack][:domk][:debug] %>
+logfile = <%= node[:openstack][:domk][:logfile] %>
+polling_interval = <%= node[:openstack][:domk][:polling_interval] %>
+services = <%= node[:openstack][:domk][:services].join(',') %>
+
+<% node[:openstack][:domk][:services].each do |service| %>
+[<%= service %>]
+worker = domk.worker.<%= service %>
+cafile = <%= node[:openstack][:old_root_pem_path] %>
+admin_user = admin
+admin_passwd = <%= node[:openstack][:admin_passwd] %>
+admin_tenant = admin
+auth_url = <%= node[:openstack][:domk][service.to_sym()][:auth_url] %>
+region = <%= node[:openstack][:region_name].nil? ? 'RegionOne' : node[:openstack][:region_name] %>
+ttl = <%= node[:openstack][:domk][service.to_sym()][:ttl].nil? ? 300 : node[:openstack][:domk][service.to_sym()][:ttl] %>
+<% if service == 'domain' %>
+domain = <%= node[:openstack][:domk][service.to_sym()][:domain] %>
+ns = <%= node[:openstack][:domk][service.to_sym()][:ns] %>
+reverse_ip_suffixs = <%= node[:openstack][:domk][service.to_sym()][:reverse_ip_suffix].nil? ? '16.172' : node[:openstack][:domk][service.to_sym()][:reverse_ip_suffix] %>
+<% elsif service == 'azro' %>
+azro_url = <%= node[:openstack][:domk][service.to_sym()][:azro_url] %>
+azro_domain = <%= node[:openstack][:domk][service.to_sym()][:azro_domain] %>
+azro_subdomain = <%= node[:openstack][:domk][service.to_sym()][:azro_subdomain] %>
+azro_user = <%= node[:openstack][:domk][service.to_sym()][:azro_user] %>
+azro_passwd = <%= node[:openstack][:domk][service.to_sym()][:azro_passwd] %>
+azro_type = <%= node[:openstack][:domk][service.to_sym()][:azro_type] %>
+azro_cname_domain = <%= node[:openstack][:domk][service.to_sym()][:azro_cname_domain] %>
+<% end %>
+
+<% end %>

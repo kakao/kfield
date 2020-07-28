@@ -1,0 +1,21 @@
+{
+  "name": "stage",
+  "chef_environment": "stage_v2",
+  "normal": {
+    "neutron": {
+      "host_route": {
+        "enable_route": true,
+        "route_phy_interface": "eth1",
+        "route_ip_cidr": "123.123.123.123",
+        "neighbor": "123.123.123.123",
+        "static_routes": "0.0.0.0/0:123.123.123.123",
+        "storage_ip_cidr": "123.123.123.123/28",
+        "ibgp_as":123
+
+      }
+    }
+  },
+  "json_class": "Chef::Node",
+  "chef_type": "node",
+  "run_list": []
+}

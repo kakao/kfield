@@ -1,0 +1,22 @@
+[DEFAULT]
+rabbit_port = <%= @rabbit_node[0][:rabbitmq][:port] %>
+rabbit_hosts = <%= @rabbit_node.sort{|x,y| x[:fqdn] <=> y[:fqdn]}.map{|x| "#{x[:fqdn]}:5672"}.join(',') %>
+rabbit_userid = <%= @rabbit_node[0][:rabbitmq][:default_user] %>
+rabbit_password = <%= @rabbit_node[0][:rabbitmq][:default_pass]  %>
+rabbit_virtual_host = <%= @rabbit_node[0][:rabbitmq][:default_vhost] %>
+ignore_users = os_admin
+ignore_dbs = lost+found, mysql, information_schema, performance_schema
+root_grant = ALL
+root_grant_option = True
+
+control_exchange = trove
+
+os_region_name=<%= node[:openstack][:region_name] %>
+
+[mysql]
+
+[redis]
+backup_strategy=RedisBackup
+backup_namespace=trove.guestagent.strategies.backup.redis_impl
+restore_namespace=trove.guestagent.strategies.restore.redis_impl
+backup_use_openssl_encryption=False

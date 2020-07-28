@@ -1,0 +1,5 @@
+- name: restart openvpn
+  service: name=openvpn state=restarted
+
+- name: tarup deploy
+  shell: chdir=/etc/openvpn/easy-rsa/ tar cvfz deploy.tar.gz deploy.tblk

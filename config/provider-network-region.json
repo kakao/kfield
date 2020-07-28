@@ -1,0 +1,48 @@
+{
+  "libvirt" : {
+    "provider" : {
+      "management_network_address" : "10.252.20.0/24",
+      "management_network_name" : "virbr0",
+      "management_network_mode" : "route"
+    },
+    "config" : {
+      "endpoints" : [
+        {
+          "slb0" : {
+            "domain" : "your.com",
+            "entries" : {
+              "api" : "devel-api",
+              "dashboard" : "devel-dashboard"
+            }
+          }
+        },
+        {
+          "r1lb0" : {
+            "domain" : "your.com",
+            "entries" : {
+              "api" : "devel-api-r1"
+            }
+          }
+        },
+        {
+          "r2lb0" : {
+            "domain" : "your.com",
+            "entries" : {
+              "api" : "devel-api-r2"
+            }
+          }
+        }
+      ],
+      "vm_start_ip_address" : 11,
+      "mode" : "ovs",
+      "ifaces" : [
+        {
+          "name" : "br-data",
+          "ip" : "10.252.100.1",
+          "netmask" : "255.255.255.0",
+          "vlan" : "100"
+        }
+      ]
+    }
+  }
+}

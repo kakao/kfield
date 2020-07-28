@@ -1,0 +1,10 @@
+[DEFAULT]
+enable_route = <%= node[:neutron][:host_route][:enable_route] %>
+route_phy_interface = <%= node[:neutron][:host_route][:route_phy_interface] %>
+route_ip_cidr = <%= node[:neutron][:host_route][:route_ip_cidr] %>
+neighbor = <%= node[:neutron][:host_route][:neighbor] %>
+static_routes = <%= node[:neutron][:host_route][:static_routes] %>
+router_pass = <%= node[:neutron][:host_route][:router_pass] %>
+router_enable_pass = <%= node[:neutron][:host_route][:router_enable_pass] %>
+ibgp_as = <%= node[:neutron][:host_route][:ibgp_as] %>
+rtproto = <%= node[:neutron][:host_route][:rtproto] %>

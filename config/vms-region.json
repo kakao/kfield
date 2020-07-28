@@ -1,0 +1,104 @@
+{
+  "vms": {
+   "slb0.stack": {
+      "memory": 1024,
+      "environment": "devel_shared",
+      "run_list": [
+        "role[base]",
+        "role[openstack-api-loadbalancer]"
+      ]
+    },
+   "sdb0.stack": {
+      "memory": 1024,
+      "cpus": 1,
+      "environment": "devel_shared",
+      "run_list": [
+        "role[openstack-mysql]",
+        "role[memcached]"
+      ]
+    },
+   "scontrol0.stack": {
+      "memory": 2048,
+      "cpus": 2,
+      "environment": "devel_shared",
+      "run_list": [
+        "role[base]",
+        "role[openstack-control-shared]"
+      ]
+    },
+   "r1lb0.stack": {
+      "memory": 1024,
+      "environment": "devel_r1",
+      "run_list": [
+        "role[base]",
+        "role[openstack-api-loadbalancer]"
+      ]
+    },
+   "r1db0.stack": {
+      "memory": 2048,
+      "cpus": 2,
+      "environment": "devel_r1",
+      "run_list": [
+        "role[openstack-mysql]",
+        "role[memcached]",
+        "role[openstack-rabbitmq]",
+        "role[ceilometer-datastore]"
+      ]
+    },
+   "r1control0.stack": {
+      "memory": 4096,
+      "cpus": 4,
+      "environment": "devel_r1",
+      "run_list": [
+        "role[base]",
+        "role[openstack-control-region]"
+      ]
+    },
+  "r1compute000.stack": {
+      "memory": 4096,
+      "cpus": 4,
+      "environment": "devel_r1",
+      "run_list": [
+        "role[base]",
+        "role[openstack-compute]"
+      ]
+    },
+   "r2lb0.stack": {
+      "memory": 1024,
+      "environment": "devel_r2",
+      "run_list": [
+        "role[base]",
+        "role[openstack-api-loadbalancer]"
+      ]
+    },
+   "r2db0.stack": {
+      "memory": 2048,
+      "cpus": 2,
+      "environment": "devel_r2",
+      "run_list": [
+        "role[openstack-mysql]",
+        "role[memcached]",
+        "role[openstack-rabbitmq]",
+        "role[ceilometer-datastore]"
+      ]
+    },
+   "r2control0.stack": {
+      "memory": 4096,
+      "cpus": 4,
+      "environment": "devel_r2",
+      "run_list": [
+        "role[base]",
+        "role[openstack-control-region]"
+      ]
+    },
+  "r2compute000.stack": {
+      "memory": 4096,
+      "cpus": 4,
+      "environment": "devel_r2",
+      "run_list": [
+        "role[base]",
+        "role[openstack-compute]"
+      ]
+    }
+  }
+}

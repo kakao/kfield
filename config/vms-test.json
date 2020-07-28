@@ -1,0 +1,19 @@
+{
+  "vms": {
+   "db0allinone": {
+      "run_list": [
+        "role[base]",
+         "role[openstack-mysql]",
+       "role[memcached]",
+        "role[openstack-rabbitmq]"
+      ]
+    },
+   "allinone":{
+      "run_list": [
+        "role[base]",
+      "role[openstack-control]",
+       "role[openstack-compute]"
+      ]
+   }
+ }
+}

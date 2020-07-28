@@ -1,0 +1,52 @@
+#!/bin/bash
+<%
+recipe_map = {
+  'ceilometer::agent-central' => %w'ceilometer-agent-central',
+  'ceilometer::alarm-evaluator' => %w'ceilometer-alarm-evaluator',
+  'ceilometer::alarm-notifier' => %w'ceilometer-alarm-notifier',
+  'ceilometer::api' => %w'ceilometer-api',
+  'ceilometer::collector' => %w'ceilometer-collector',
+  'ceilometer::compute-agent' => %w'ceilometer-agent-compute',
+  'cinder::api' => %w'cinder-api',
+  'cinder::scheduler' => %w'cinder-scheduler',
+  'cinder::volume' => %w'cinder-volume',
+  'glance::api' => %w'glance-api',
+  'glance::registry' => %w'glance-registry',
+  'heat::api' => %w'heat-api',
+  'heat::api-cfn' => %w'heat-api-cfn',
+  'heat::api-cloudwatch' => %w'heat-api-cloudwatch',
+  'heat::engine' => %w'heat-engine',
+  'horizon::dashboard' => %w'apache2',
+  'keystone::server' => %w'keystone',
+  'neutron::agent' => ["neutron-plugin-#{node[:neutron][:plugin_agent]}-agent"],
+  'neutron::dhcp-agent' => %w'neutron-dhcp-agent',
+  'neutron::metadata-agent' => %w'neutron-metadata-agent',
+  'neutron::server' => %w'neutron-server',
+  'nova::api' => %w'nova-api',
+  'nova::cert' => %w'nova-cert',
+  'nova::compute' => %w'nova-compute',
+  'nova::conductor' => %w'nova-conductor',
+  'nova::consoleauth' => %w'nova-consoleauth',
+  'nova::novncproxy' => %w'nova-novncproxy',
+  'nova::scheduler' => %w'nova-scheduler',
+  'swift::account-server' => %w'swift-account swift-account-autditor swift-account-reapter swift-account-replicator',
+  'swift::container-server' => %w'swift-container swift-container-auditor swift-container-replicator swift-container-rsync swift-container-updater',
+  'swift::object-server' => %w'swift-object swift-object-auditor swift-object-replicator swift-object-updater',
+  'swift::proxy-server' => %w'haproxy swift-proxy',
+  'trove::api' => %w'trove-api',
+  'trove::conductor' => %w'trove-conductor',
+  'trove::taskmanager' => %w'trove-taskmanager',
+}
+-%>
+
+<% recipe_map.each do |recipe, services| -%>
+<% if node.recipes.include?(recipe) -%>
+  <% services.each do |service|  %>
+    <% if (node[:lsb][:release] == '12.04') or (recipe == 'horizon::dashboard' or recipe.start_with? 'swift::') -%>
+service <%= service %> "$@"
+    <% else %>
+$@ <%= service %>
+    <% end %>
+<% end %>
+<% end %>
+<% end %>

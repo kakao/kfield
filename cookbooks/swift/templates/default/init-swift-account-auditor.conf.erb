@@ -1,0 +1,20 @@
+# swift-account-auditor - SWIFT Account Auditor
+#
+# The swift account auditor.
+
+description     "SWIFT Account Auditor"
+author          "Marc Cluet <marc.cluet@ubuntu.com>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+pre-start script
+  if [ -f "/etc/swift/account-server.conf" ]; then
+    exec <%= node[:openstack][:install][:source][:path] %>/bin/swift-init account-auditor start
+  else
+    exit 1
+  fi
+end script
+
+post-stop exec <%= node[:openstack][:install][:source][:path] %>/bin/swift-init account-auditor stop
+

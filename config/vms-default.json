@@ -1,0 +1,74 @@
+{
+  "vms": {
+    "lb0.stack": {
+      "memory": 1024,
+      "run_list": [
+        "role[openstack-api-loadbalancer]"
+        ]
+    },
+    "logger.stack": {
+      "memory": 2048,
+      "cpus": 2,
+      "run_list": [
+        "role[base]",
+        "recipe[java::default]",
+        "recipe[curl::default]",
+        "role[logstash_server]",
+        "recipe[kibana]",
+        "recipe[kibana::apache]"
+        ]
+    },
+    "db0.stack": {
+      "memory": 4096,
+      "cpus": 8,
+      "run_list": [
+        "role[openstack-mysql]",
+        "role[memcached]",
+        "role[openstack-rabbitmq]",
+        "role[ceilometer-datastore]"
+        ]
+    },
+    "control0.stack": {
+      "memory": 5120,
+      "cpus": 4,
+      "run_list": [
+        "role[openstack-control]"
+        ]
+    },
+    "control1.stack": {
+      "memory": 5120,
+      "cpus": 4,
+      "run_list": [
+        "role[openstack-control]"
+        ]
+    },
+    "compute000.stack": {
+      "memory": 4096,
+      "cpus": 8,
+      "run_list": [
+        "role[openstack-compute]"
+        ]
+    },
+    "compute001.stack": {
+      "memory": 4096,
+      "cpus": 8,
+      "run_list": [
+        "role[openstack-compute]"
+        ]
+    },
+    "compute002.stack": {
+      "memory": 4096,
+      "cpus": 8,
+      "run_list": [
+        "role[openstack-compute]"
+        ]
+    },
+    "swift0.stack": {
+      "memory": 2048,
+      "cpus": 2,
+      "run_list": [
+        "role[swift-saio]"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+# vim:set ft=upstart ts=2 et:
+description "Neutron Metadata Plugin Agent"
+author "Yolanda Robla <yolanda.robla@canonical.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+chdir /var/run
+
+pre-start script
+  mkdir -p /var/run/neutron
+  chown neutron:root /var/run/neutron
+end script
+
+exec start-stop-daemon --start --chuid neutron --exec <%= node[:openstack][:install][:source][:path] %>/bin/neutron-metadata-agent -- \
+       --config-file=/etc/neutron/neutron.conf --config-file=/etc/neutron/metadata_agent.ini \
+       --log-file=/var/log/neutron/metadata-agent.log

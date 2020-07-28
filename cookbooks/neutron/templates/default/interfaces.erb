@@ -1,0 +1,10 @@
+#interface file
+auto lo
+iface lo inet loopback
+
+auto br0
+iface br0 inet static
+up route add -net <%= @default_gateway %> netmask 255.255.255.255 dev br0
+address <%= @address %>/32
+up route add default gw <%= @default_gateway %>
+dns-nameservers 10.20.30.40

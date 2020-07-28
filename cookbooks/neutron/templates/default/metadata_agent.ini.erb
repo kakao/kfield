@@ -1,0 +1,38 @@
+[DEFAULT]
+# Show debugging output in log (sets DEBUG log level output)
+debug = <%= node[:openstack][:debug][:neutron] %>
+
+# The Neutron user information for accessing the Neutron API.
+auth_url = <%= @auth_addr %>:35357/v2.0
+auth_region = <%= node[:openstack][:region_name] %>
+# Turn off verification of the certificate for ssl
+# auth_insecure = False
+# Certificate Authority public key (CA cert) file for ssl
+# auth_ca_cert =
+admin_tenant_name = service
+admin_user = neutron
+admin_password = <%= node[:openstack][:service_passwd] %>
+
+# Network service endpoint type to pull from the keystone catalog
+# endpoint_type = adminURL
+
+# IP address used by Nova metadata server
+nova_metadata_ip = <%= @api_host %>
+
+# TCP Port used by Nova metadata server
+# nova_metadata_port = 8775
+
+# When proxying metadata requests, Neutron signs the Instance-ID header with a
+# shared secret to prevent spoofing.  You may select any string for a secret,
+# but it must match here and in the configuration used by the Nova Metadata
+# Server. NOTE: Nova uses a different key: neutron_metadata_proxy_shared_secret
+metadata_proxy_shared_secret = <%= node[:neutron][:metadata_proxy_shared_secret] %>
+
+# Location of Metadata Proxy UNIX domain socket
+# metadata_proxy_socket = $state_path/metadata_proxy
+
+# Number of separate worker processes for metadata server
+metadata_workers = <%= node[:neutron][:metadata_workers] %>
+
+# Number of backlog requests to configure the metadata server socket with
+metadata_backlog = <%= node[:neutron][:metadata_backlog] %>

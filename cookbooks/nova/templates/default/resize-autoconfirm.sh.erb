@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source /root/openrc
+
+while read -r uuid name; do
+  fqdn=<%= node[:neutron][:dhcp_domain] %>
+  ping -c 1 $name.$fqdn > /dev/null 2>&1 && nova resize-confirm "$uuid"
+done< <(nova list --all-tenants --status VERIFY_RESIZE | awk '/VERIFY_RESIZE/{print $2" "$4}')

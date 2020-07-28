@@ -1,0 +1,18 @@
+description "Nova cert"
+author "Soren Hansen <soren@linux2go.dk>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+
+chdir /var/run
+
+pre-start script
+	mkdir -p /var/run/nova
+	chown nova:root /var/run/nova/
+
+	mkdir -p /var/lock/nova
+	chown nova:root /var/lock/nova/
+end script
+
+exec start-stop-daemon --start --chuid nova --exec <%= node[:openstack][:install][:source][:path] %>/bin/nova-cert -- --config-file=/etc/nova/nova.conf

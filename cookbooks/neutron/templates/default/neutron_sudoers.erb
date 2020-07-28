@@ -1,0 +1,4 @@
+Defaults:neutron !requiretty
+Defaults:neutron secure_path="<%= node[:openstack][:install][:source][:path] %>/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/quagga"
+
+neutron ALL = (root) NOPASSWD: <%= node[:openstack][:install][:source][:path] %>/bin/neutron-rootwrap /etc/neutron/rootwrap.conf *

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+count=$(ps -ef | grep -w '/opt/openstack/bin/python2.7 /opt/openstack/bin/domk --config\(.*\)=/etc/domk.conf' | grep -v grep | wc -l)
+
+if (( "$count" < "2" )); then
+  curl -XPOST http://your_messanger_url -d "to=352&msg=[OPENSTACK ERROR]%0Adomk 죽음%0A환경: <%= node.chef_environment %>%0A호스트: <%= node[:fqdn] %>"
+fi

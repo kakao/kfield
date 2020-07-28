@@ -1,0 +1,137 @@
+---
+- hosts: sandbox
+  vars:
+    proxy_env:
+      http_proxy: http://proxy.server.io:8080
+      https_proxy: http://proxy.server.io:8080
+    chefdk_ver: 0.4.0
+    vagrant_ver: 1.6.5
+
+  tasks:
+  - name: Install required packages
+    sudo: yes
+    apt: name={{ item }}
+    with_items:
+    - git
+    - git-core
+    - make
+    - gcc
+    - g++
+    - autoconf
+    - libxslt1-dev
+    - libxml2-dev
+    - libvirt-dev
+    - libvirt-bin
+    - dnsmasq
+    - openvswitch-switch
+    - qemu-kvm
+    - qemu-utils
+
+  - name: Uninstall gem if already exist.
+    command: gem uninstall chef knife vagrant berkshelf -alx
+    ignore_errors: yes
+
+  - name: Check chef-dk file exist.
+    stat: path=/tmp/chefdk_{{ chefdk_ver }}-1_amd64.deb
+    register: chef_install_file
+
+  - name: Download chef-dk
+    when: chef_install_file.stat.exists == false
+    get_url: url="http://ftp.yoursite.com//chefdk/chefdk_{{ chefdk_ver }}-1_amd64.deb" dest=/tmp
+    environment: proxy_env
+
+  - name: Install chef-dk
+    apt: deb="/tmp/chefdk_{{ chefdk_ver }}-1_amd64.deb"
+    sudo: yes
+
+  - name: Add chef
+    lineinfile:
+      dest: ~/.bashrc
+      line: "{{ item }}"
+    with_items:
+      - eval "$(chef shell-init bash)"
+
+  - name: Make directory /tmp/fake_key
+    file: path=/tmp/fake_key state=directory
+
+  - name: Copy fake_key for chef-zero
+    copy:
+      src: fake.pem
+      dest: /tmp/fake_key/fake.pem
+      mode: 0600
+
+  - name: Set usermod
+    sudo: yes
+    command: usermod -a -G libvirtd vagrant
+
+  - name: Remove dns module
+    sudo: yes
+    apt: name={{ item }} state=absent purge=yes
+    with_items:
+    - libnss-mdns
+    - dnsutils
+
+  - name: Download bash_completion.d for vagrant
+    get_url: url=https://raw.github.com/kura/vagrant-bash-completion/master/etc/bash_completion.d/vagrant dest=/etc/bash_completion.d/vagrant
+    sudo: yes
+    environment: proxy_env
+
+  - name: Download bash_completion.d for virsh
+    get_url: url=https://launchpadlibrarian.net/82049364/virsh dest=/etc/bash_completion.d/virsh
+    sudo: yes
+    environment: proxy_env
+
+
+  - name: Check vagrant install file exist.
+    stat: path="/tmp/vagrant_{{ vagrant_ver }}_x86_64.deb"
+    register: vagrant_install_file
+
+  - name: Download vagrant
+    when: vagrant_install_file.stat.exists == false
+    get_url: url="http://ftp.yoursite.com/vagrant/vagrant_{{ vagrant_ver }}_x86_64.deb" dest=/tmp
+    environment: proxy_env
+
+  - name: Install vagrant
+    apt: deb="/tmp/vagrant_{{ vagrant_ver }}_x86_64.deb"
+    sudo: yes
+
+  - name: Install vagrant plugins
+    shell: bash -x vagrant_plugins.sh
+    args:
+      chdir: ~/kfield/
+
+  - name: Make directory ~/.chef
+    file: path=~/.chef state=directory
+
+  - name: Set knife config
+    template:
+      src: knife.rb
+      dest: ~/.chef/knife.rb
+
+  - name: berks install twice!!
+    command: "{{ item }}"
+    args:
+      chdir: ~/kfield/
+    with_items:
+    - berks install
+    - berks install
+    environment: proxy_env
+
+  - name: Check default virsh network already exist
+    sudo: yes
+    command: virsh net-list --all
+    register: default_virsh_network
+
+  - name: Delete default virsh network
+    sudo: yes
+    when: default_virsh_network.stdout.find('default') != -1
+    command: virsh net-undefine default
+
+  - name: Add environments
+    lineinfile:
+      dest: ~/.bashrc
+      line: "{{ item }}"
+    with_items:
+      - export UBUNTU_RELEASE=trusty
+      - export BERKSHELF=true
+      - export vms_config=vms-minimal.json

@@ -1,0 +1,25 @@
+deb http://ftp.daumkakao.com/ubuntu/ precise main restricted
+deb-src http://ftp.daumkakao.com/ubuntu/ precise main restricted
+
+deb http://ftp.daumkakao.com/ubuntu/ precise-updates main restricted
+deb-src http://ftp.daumkakao.com/ubuntu/ precise-updates main restricted
+
+deb http://ftp.daumkakao.com/ubuntu/ precise universe
+deb-src http://ftp.daumkakao.com/ubuntu/ precise universe
+deb http://ftp.daumkakao.com/ubuntu/ precise-updates universe
+deb-src http://ftp.daumkakao.com/ubuntu/ precise-updates universe
+
+deb http://ftp.daumkakao.com/ubuntu/ precise multiverse
+deb-src http://ftp.daumkakao.com/ubuntu/ precise multiverse
+deb http://ftp.daumkakao.com/ubuntu/ precise-updates multiverse
+deb-src http://ftp.daumkakao.com/ubuntu/ precise-updates multiverse
+
+deb http://ftp.daumkakao.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://ftp.daumkakao.com/ubuntu/ precise-backports main restricted universe multiverse
+
+deb http://ftp.daumkakao.com/ubuntu precise-security main restricted
+deb-src http://ftp.daumkakao.com/ubuntu precise-security main restricted
+deb http://ftp.daumkakao.com/ubuntu precise-security universe
+deb-src http://ftp.daumkakao.com/ubuntu precise-security universe
+deb http://ftp.daumkakao.com/ubuntu precise-security multiverse
+deb-src http://ftp.daumkakao.com/ubuntu precise-security multiverse

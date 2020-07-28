@@ -1,0 +1,33 @@
+{
+  "openstack": {
+   "staging": {
+      "user": "andrew.kong",
+      "image": "ubuntu-12.04-2013.08.14",
+      "endpoint":"https://ccc-staging-api.your.com:5000/v2.0/tokens",
+      "availability_zone" :"vlan902",
+      "tenant" : "andrew.kong",
+      "username" : "andrew.kong",
+      "ssh_username" : "root",
+      "keypair" :"andrew",
+      "flavor" : "m1.large",
+      "box_url" : "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box",
+      "box": "dummy",
+      "keypath":"~/.ssh/cloud.key"
+    },
+   "inhouse": {
+      "user": "andrew.kong",
+      "image": "ubuntu-12.04-2014.03.04",
+      "endpoint":"https://your_keystone_public_auth:5000/v2.0/tokens",
+      "availability_zone" :"Dev_Zone",
+      "tenant" : "andrew.kong",
+      "username" : "andrew.kong",
+      "ssh_username" : "vagrant",
+      "keypair" :"andrew",
+      "flavor" : "m1.large",
+      "networks" : "NET_DEV",
+      "box_url" : "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box",
+      "box": "dummy",
+      "keypath":"~/.ssh/cloud.key"
+    } 
+  }
+}

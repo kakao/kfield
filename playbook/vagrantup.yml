@@ -1,0 +1,67 @@
+# vagrant up by order
+---
+- hosts: sandbox
+  tasks:
+  - name: vagrant up db0.stack
+    shell: vagrant up db0.stack --no-provision
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up --no-provision
+    shell: vagrant up --no-provision
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up db0.stack
+    shell: vagrant provision db0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up control0.stack
+    shell: vagrant provision control0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up control0.stack
+    shell: vagrant provision control0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up lb0.stack
+    shell: vagrant provision lb0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up control0.stack
+    shell: vagrant provision control0.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json
+
+  - name: vagrant up compute000.stack
+    shell: vagrant provision compute000.stack
+    args:
+      chdir: ~vagrant/kfield/
+      executable: /bin/bash
+    environment:
+      vms_config: vms-minimal.json

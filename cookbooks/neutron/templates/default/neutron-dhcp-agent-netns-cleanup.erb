@@ -1,0 +1,4 @@
+# vim: set filetype=crontab:
+# Periodically cleans Quantum's network namespaces on behalf of the Quantum
+# DHCP agent.
+30 * * * * neutron if [ -x <%= node[:openstack][:install][:source][:path] %>/bin/neutron-netns-cleanup ] ; then <%= "PATH=#{node[:openstack][:install][:source][:path]}/bin:${PATH} #{node[:openstack][:install][:source][:path]}" %>/bin/neutron-netns-cleanup --config-file=/etc/neutron/neutron.conf --config-file=/etc/neutron/dhcp_agent.ini >/dev/null 2>&1; fi

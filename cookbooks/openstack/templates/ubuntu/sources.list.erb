@@ -1,0 +1,25 @@
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %> main restricted
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %> main restricted
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-updates main restricted
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-updates main restricted
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %> universe
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %> universe
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-updates universe
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-updates universe
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %> multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %> multiverse
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-updates multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-updates multiverse
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-backports main restricted universe multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu/ <%= node[:lsb][:codename] %>-backports main restricted universe multiverse
+
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu <%= node[:lsb][:codename] %>-security main restricted
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu <%= node[:lsb][:codename] %>-security main restricted
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu <%= node[:lsb][:codename] %>-security universe
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu <%= node[:lsb][:codename] %>-security universe
+deb <%= node[:ubuntu][:archive_url] %>/ubuntu <%= node[:lsb][:codename] %>-security multiverse
+deb-src <%= node[:ubuntu][:archive_url] %>/ubuntu <%= node[:lsb][:codename] %>-security multiverse

@@ -1,0 +1,11 @@
+description "Glance API server"
+author "Soren Hansen <soren@linux2go.dk>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+exec start-stop-daemon --start --chuid glance \
+            --chdir /var/lib/glance --name glance-api \
+            --exec <%= node[:openstack][:install][:source][:path] %>/bin/glance-api
