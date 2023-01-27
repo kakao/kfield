@@ -257,7 +257,7 @@ GEM
     method_source (0.8.2)
     mini_portile2 (2.1.0)
     minitar (0.5.4)
-    mixlib-archive (0.2.0)
+    mixlib-archive (0.4.20)
       mixlib-log
     mixlib-authentication (1.4.1)
       mixlib-log
